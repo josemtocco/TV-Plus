@@ -226,7 +226,7 @@ def write_m3u(channels: dict[str, dict], path: str):
             attrs += f' group-title="{cat}"'
 
             lines.append(f"#EXTINF:{attrs},{name}")
-            lines.append("#EXTSIZE: big")
+            lines.append("#EXTSIZE: medium")
             lines.append(url)
             total += 1
 
