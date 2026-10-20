@@ -2,6 +2,26 @@
 # Também usa matching parcial / contains
 
 CATEGORY_SYNONYMS = {
+    # Hallo / Hallo
+    "hallo": "Hallo",
+    "hallotv": "Hallo",
+    "hallo tv": "Hallo",
+
+    # Pluto TV / Pluto TV
+    "pluto": "Pluto TV",
+    "plutotv": "Pluto TV",
+    "pluto tv": "Pluto TV",
+    
+    # Urban / Urban TV
+    "Urban": "Urban TV"
+    "UrbanTV": "Urban TV"
+    "Urban TV": "Urban TV"
+
+    # Runtime / Runtime TV
+    "Runtime": "Runtime TV"
+    "RuntimeTV": "Runtime TV"
+    "Runtime TV": "Runtime TV"
+
     # Notícias / News
     "noticias": "Notícias",
     "notícias": "Notícias",
@@ -295,6 +315,10 @@ CONTAINS_MAP = [
     ("étnic", "Internacional"),
     ("etnic", "Internacional"),
     ("fm", "Música"),
+    ("hallo", "Hallo"),
+    ("pluto", "Pluto TV"),
+    ("Urban", "Urban TV"),
+    ("Runtime" / "Runtime TV")
 ]
 
 
