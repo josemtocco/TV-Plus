@@ -12,15 +12,15 @@ CATEGORY_SYNONYMS = {
     "plutotv": "Pluto TV",
     "pluto tv": "Pluto TV",
     
-    # Urban / Urban TV
+    # Urban TV / Urban TV
     "Urban": "Urban TV"
-    "UrbanTV": "Urban TV"
-    "Urban TV": "Urban TV"
+    "Urbantv": "Urban TV"
+    "Urban tv": "Urban TV"
 
     # Runtime / Runtime TV
     "Runtime": "Runtime TV"
-    "RuntimeTV": "Runtime TV"
-    "Runtime TV": "Runtime TV"
+    "Runtimetv": "Runtime TV"
+    "Runtime tv": "Runtime TV"
 
     # Notícias / News
     "noticias": "Notícias",
