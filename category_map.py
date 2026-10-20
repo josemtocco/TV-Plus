@@ -30,7 +30,8 @@ CATEGORY_SYNONYMS = {
     "notícia": "Notícias",
     "jornalismo": "Notícias",
     "jornal": "Notícias",
-    
+    "globonews": "Notícias",    
+
     # Desenhos / Kids / Infantil
     "desenhos": "Infantil",
     "desenho": "Infantil",
