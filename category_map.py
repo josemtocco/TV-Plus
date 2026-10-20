@@ -318,7 +318,7 @@ CONTAINS_MAP = [
     ("hallo", "Hallo"),
     ("pluto", "Pluto TV"),
     ("Urban", "Urban TV"),
-    ("Runtime" "Runtime TV")
+    ("Runtime", "Runtime TV")
 ]
 
 
