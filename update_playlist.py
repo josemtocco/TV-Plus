@@ -56,12 +56,15 @@ CATEGORY_ORDER = [
     "Variedades",
     "Religiosos",
     "Culinária",
-    "Educativos",
-    "Cultura",
+    "Educativos / Cultura",
+    "Pluto Tv",
+    "Hallo Tv",
+    "Urban TV",
+    "Web TV",
     "Automóveis",
-    "Animais",
     "Agronegócio",
     "Televendas",
+    "Internacional",
     "Outros",
 ]
 
@@ -161,7 +164,7 @@ def merge_channels(current: dict[str, dict], previous: dict[str, dict]) -> dict[
         result[url] = {
             "name": ch["name"],
             "logo": ch.get("logo") or prev.get("logo", ""),
-            "group": normalize_category(ch["group"]),
+            "group": normalize_category(ch["group"], ch.get("name", "")),
             "tvg_id": ch.get("tvg_id") or prev.get("tvg_id", ""),
             "tvg_name": ch.get("tvg_name") or prev.get("tvg_name", ch["name"]),
             "fail_count": 0,
@@ -177,7 +180,7 @@ def merge_channels(current: dict[str, dict], previous: dict[str, dict]) -> dict[
             result[url] = {
                 "name": prev.get("name", "Sem Nome"),
                 "logo": prev.get("logo", ""),
-                "group": normalize_category(prev.get("group", "Outros")),
+                "group": normalize_category(prev.get("group", "Outros"), prev.get("name", "")),
                 "tvg_id": prev.get("tvg_id", ""),
                 "tvg_name": prev.get("tvg_name", prev.get("name", "")),
                 "fail_count": fails,
@@ -194,7 +197,7 @@ def write_m3u(channels: dict[str, dict], path: str):
     # Group by normalized category
     by_cat = defaultdict(list)
     for url, ch in channels.items():
-        cat = normalize_category(ch.get("group", ""))
+        cat = normalize_category(ch.get("group", ""), ch.get("name", ""))
         by_cat[cat].append((url, ch))
 
     # Sort categories
@@ -226,7 +229,7 @@ def write_m3u(channels: dict[str, dict], path: str):
             attrs += f' group-title="{cat}"'
 
             lines.append(f"#EXTINF:{attrs},{name}")
-            lines.append("#EXTSIZE: medium")
+            lines.append("#EXTSIZE: big")
             lines.append(url)
             total += 1
 
@@ -254,8 +257,8 @@ def main():
             url = ch["url"].strip()
             if not url or url.startswith("#"):
                 continue
-            # Normalize group early
-            ch["group"] = normalize_category(ch.get("group", ""))
+            # Normalize group early (usa nome do canal para plataformas Pluto/Hallo/Urban/Web TV etc.)
+            ch["group"] = normalize_category(ch.get("group", ""), ch.get("name", ""))
             if url not in current or len(ch["name"]) > len(current[url]["name"]):
                 current[url] = ch
 
@@ -272,7 +275,7 @@ def main():
 
     # Summary by category
     from collections import Counter
-    cats = Counter(normalize_category(ch.get("group", "")) for ch in final.values())
+    cats = Counter(normalize_category(ch.get("group", ""), ch.get("name", "")) for ch in final.values())
     print("\nCategorias:")
     for cat, cnt in cats.most_common():
         print(f"  {cat}: {cnt}")

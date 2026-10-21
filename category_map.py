@@ -1,27 +1,7 @@
 # Category normalization map: lowercase key -> canonical name
-# Também usa matching parcial / contains
+# Também usa matching parcial / contains e prioridade por nome do canal
 
 CATEGORY_SYNONYMS = {
-    # Hallo / Hallo
-    "hallo": "Hallo",
-    "hallotv": "Hallo",
-    "hallo tv": "Hallo",
-
-    # Pluto TV / Pluto TV
-    "pluto": "Pluto TV",
-    "plutotv": "Pluto TV",
-    "pluto tv": "Pluto TV",
-    
-    # Urban TV / Urban TV
-    "Urban": "Urban TV",
-    "Urbantv": "Urban TV",
-    "Urban tv": "Urban TV",
-
-    # Runtime / Runtime TV
-    "Runtime": "Runtime TV",
-    "Runtimetv": "Runtime TV",
-    "Runtime tv": "Runtime TV",
-
     # Notícias / News
     "noticias": "Notícias",
     "notícias": "Notícias",
@@ -30,7 +10,8 @@ CATEGORY_SYNONYMS = {
     "notícia": "Notícias",
     "jornalismo": "Notícias",
     "jornal": "Notícias",
-    "globonews": "Notícias",    
+    "globonews": "Notícias",
+    "globo news": "Notícias",
 
     # Desenhos / Kids / Infantil
     "desenhos": "Infantil",
@@ -49,7 +30,7 @@ CATEGORY_SYNONYMS = {
     "animes": "Infantil",
     "anime": "Infantil",
     "animation": "Infantil",
-    
+
     # Cinema / Filmes
     "cinema": "Filmes",
     "filmes": "Filmes",
@@ -63,7 +44,7 @@ CATEGORY_SYNONYMS = {
     "classic": "Filmes",
     "faroeste": "Filmes",
     "western": "Filmes",
-    
+
     # Esportes
     "esportes": "Esportes",
     "esporte": "Esportes",
@@ -72,7 +53,7 @@ CATEGORY_SYNONYMS = {
     "futebol": "Esportes",
     "football": "Esportes",
     "games": "Esportes",
-    
+
     # Música
     "musicas": "Música",
     "músicas": "Música",
@@ -87,7 +68,7 @@ CATEGORY_SYNONYMS = {
     "rádios": "Música",
     "flashback": "Música",
     "pop": "Música",
-    
+
     # Seriados / Séries
     "seriados": "Séries",
     "series": "Séries",
@@ -96,7 +77,7 @@ CATEGORY_SYNONYMS = {
     "série": "Séries",
     "novelas": "Séries",
     "novela": "Séries",
-    
+
     # Variedades
     "variedades": "Variedades",
     "variedade": "Variedades",
@@ -110,7 +91,7 @@ CATEGORY_SYNONYMS = {
     "jovem": "Variedades",
     "comedy": "Variedades",
     "reality": "Variedades",
-    
+
     # TVs Abertas / Canais Abertos
     "tvs abertas": "TVs Abertas",
     "tv aberta": "TVs Abertas",
@@ -123,7 +104,8 @@ CATEGORY_SYNONYMS = {
     "público": "TVs Abertas",
     "tv brasil": "TVs Abertas",
     "tv": "TVs Abertas",
-    "webtv": "TVs Abertas",
+    "rede nbx tv": "TVs Abertas",
+    "rede nbx": "TVs Abertas",
     "regionais": "TVs Abertas",
     "regional": "TVs Abertas",
     "comunitaria": "TVs Abertas",
@@ -131,19 +113,24 @@ CATEGORY_SYNONYMS = {
     "retransmissora": "TVs Abertas",
     "governo": "TVs Abertas",
     "legislative": "TVs Abertas",
+    # Alta Definição → realocada para TVs Abertas (sem categoria própria)
     "alta definição": "TVs Abertas",
     "alta definicao": "TVs Abertas",
+    "alta definição ( hd,fhd )": "TVs Abertas",
     "hd": "TVs Abertas",
     "fhd": "TVs Abertas",
-    
-    # Documentários
+
+    # Documentários (inclui ex-Animais / Pet)
     "documentarios": "Documentários",
     "documentários": "Documentários",
     "documentario": "Documentários",
     "documentário": "Documentários",
     "docs": "Documentários",
     "documentary": "Documentários",
-    
+    "animais": "Documentários",
+    "animal": "Documentários",
+    "pet": "Documentários",
+
     # Religiosos
     "evangelicos": "Religiosos",
     "evangélicos": "Religiosos",
@@ -162,7 +149,7 @@ CATEGORY_SYNONYMS = {
     "religiosos": "Religiosos",
     "religious": "Religiosos",
     "igreja": "Religiosos",
-    
+
     # Culinária
     "culinarias": "Culinária",
     "culinárias": "Culinária",
@@ -171,20 +158,18 @@ CATEGORY_SYNONYMS = {
     "comida": "Culinária",
     "cooking": "Culinária",
     "gastronomia": "Culinária",
-    
-    # Educativos
-    "educativos": "Educativos",
-    "educativo": "Educativos",
-    "educacao": "Educativos",
-    "educação": "Educativos",
-    "education": "Educativos",
-    "educativa": "Educativos",
-    
-    # Cultura
-    "cultura": "Cultura",
-    "cultural": "Cultura",
-    "culture": "Cultura",
-    
+
+    # Educativos + Cultura (unificados)
+    "educativos": "Educativos / Cultura",
+    "educativo": "Educativos / Cultura",
+    "educacao": "Educativos / Cultura",
+    "educação": "Educativos / Cultura",
+    "education": "Educativos / Cultura",
+    "educativa": "Educativos / Cultura",
+    "cultura": "Educativos / Cultura",
+    "cultural": "Educativos / Cultura",
+    "culture": "Educativos / Cultura",
+
     # Automóveis
     "automoveis": "Automóveis",
     "automóveis": "Automóveis",
@@ -193,17 +178,12 @@ CATEGORY_SYNONYMS = {
     "carros": "Automóveis",
     "carro": "Automóveis",
     "auto": "Automóveis",
-    
-    # Animais / Pet
-    "animais": "Animais",
-    "animal": "Animais",
-    "pet": "Animais",
-    
+
     # Televendas
     "televendas": "Televendas",
     "vendas": "Televendas",
     "shopping": "Televendas",
-    
+
     # Agronegócio
     "agronegocio": "Agronegócio",
     "agronegócio": "Agronegócio",
@@ -212,11 +192,21 @@ CATEGORY_SYNONYMS = {
     "agro": "Agronegócio",
     "rural": "Agronegócio",
     "campo": "Agronegócio",
-    
+
     # Internacional
     "internacional": "Internacional",
     "international": "Internacional",
-    
+
+    # Plataformas dedicadas (também por group se vier)
+    "pluto tv": "Pluto Tv",
+    "pluto": "Pluto Tv",
+    "hallo tv": "Hallo Tv",
+    "hallo": "Hallo Tv",
+    "urban tv": "Urban TV",
+    "urban": "Urban TV",
+    "web tv": "Web TV",
+    "webtv": "Web TV",
+
     # Outros
     "sem categoria": "Outros",
     "outros": "Outros",
@@ -225,7 +215,6 @@ CATEGORY_SYNONYMS = {
     "brazil": "TVs Abertas",
     "brasil": "TVs Abertas",
 
-    "alta definição ( hd,fhd )": "TVs Abertas",
     "sp": "TVs Abertas",
     "posição premium": "Variedades",
     "posicao premium": "Variedades",
@@ -244,15 +233,16 @@ CATEGORY_SYNONYMS = {
     "rn": "TVs Abertas",
     "étnicos": "Internacional",
     "etnicos": "Internacional",
-
 }
 
-# Keywords that if present in the raw name (after lower) map to category
+# Keywords that if present in the raw group (after lower) map to category
 CONTAINS_MAP = [
     ("notícia", "Notícias"),
     ("noticia", "Notícias"),
     ("news", "Notícias"),
     ("jornal", "Notícias"),
+    ("globo news", "Notícias"),
+    ("globonews", "Notícias"),
     ("desenho", "Infantil"),
     ("kids", "Infantil"),
     ("infantil", "Infantil"),
@@ -280,6 +270,8 @@ CONTAINS_MAP = [
     ("documentár", "Documentários"),
     ("documentar", "Documentários"),
     ("documentary", "Documentários"),
+    ("animal", "Documentários"),   # ex-Animais → Documentários
+    ("pet", "Documentários"),
     ("evangélic", "Religiosos"),
     ("evangelic", "Religiosos"),
     ("gospel", "Religiosos"),
@@ -289,23 +281,25 @@ CONTAINS_MAP = [
     ("culinár", "Culinária"),
     ("culinari", "Culinária"),
     ("cooking", "Culinária"),
-    ("educativ", "Educativos"),
-    ("educaç", "Educativos"),
-    ("education", "Educativos"),
-    ("cultur", "Cultura"),
+    ("educativ", "Educativos / Cultura"),
+    ("educaç", "Educativos / Cultura"),
+    ("education", "Educativos / Cultura"),
+    ("cultur", "Educativos / Cultura"),
     ("automó", "Automóveis"),
     ("automov", "Automóveis"),
     ("carro", "Automóveis"),
-    ("animal", "Animais"),
-    ("pet", "Animais"),
     ("televenda", "Televendas"),
     ("agro", "Agronegócio"),
     ("rural", "Agronegócio"),
     ("abert", "TVs Abertas"),
     ("regional", "TVs Abertas"),
-    ("webtv", "TVs Abertas"),
+    ("alta def", "TVs Abertas"),
     ("internacional", "Internacional"),
-
+    ("pluto", "Pluto Tv"),
+    ("hallo", "Hallo Tv"),
+    ("urban", "Urban TV"),
+    ("web tv", "Web TV"),
+    ("webtv", "Web TV"),
     ("premium", "Variedades"),
     ("outdoor", "Variedades"),
     ("travel", "Variedades"),
@@ -316,31 +310,49 @@ CONTAINS_MAP = [
     ("étnic", "Internacional"),
     ("etnic", "Internacional"),
     ("fm", "Música"),
-    ("hallo", "Hallo"),
-    ("pluto", "Pluto TV"),
-    ("Urban", "Urban TV"),
-    ("Runtime", "Runtime TV")
 ]
 
 
-def normalize_category(raw: str) -> str:
-    if not raw:
-        return "Outros"
-    original = raw.strip()
+def normalize_category(raw: str, channel_name: str = "") -> str:
+    """
+    Normaliza a categoria.
+    Prioridade:
+      1. Nome do canal (plataformas Pluto / Hallo / Urban / Web TV e GloboNews)
+      2. group-title exato / contains
+    """
+    name_lower = (channel_name or "").strip().lower()
+    original = (raw or "").strip()
     key = original.lower()
-    
-    # Exact match first
+
+    # --- Prioridade 1: nome do canal (plataformas e casos especiais) ---
+    if name_lower:
+        if "pluto" in name_lower:
+            return "Pluto Tv"
+        # Hallo TV (evita falso positivo de Halloween)
+        if "hallo" in name_lower and "halloween" not in name_lower:
+            return "Hallo Tv"
+        if "urban" in name_lower or "trace urban" in name_lower:
+            return "Urban TV"
+        if "web tv" in name_lower or "webtv" in name_lower or "web-tv" in name_lower:
+            return "Web TV"
+        if "globonews" in name_lower or "globo news" in name_lower:
+            return "Notícias"
+
+    # --- Prioridade 2: group-title ---
+    if not original:
+        return "Outros"
+
+    # Exact match
     if key in CATEGORY_SYNONYMS:
         return CATEGORY_SYNONYMS[key]
-    
+
     # Contains / partial
     for fragment, cat in CONTAINS_MAP:
         if fragment in key:
             return cat
-    
-    # Title-case the original if nothing matches (but clean a bit)
-    # Avoid very long or weird names becoming categories
+
+    # Evitar categorias longas ou estranhas
     if len(original) > 40 or ";" in original or "/" in original:
         return "Outros"
-    
+
     return original.title() if original else "Outros"
