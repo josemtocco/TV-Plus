@@ -209,7 +209,7 @@ def write_m3u(channels: dict[str, dict], path: str):
     lines = [
         "#EXTM3U",
         f"#PLAYLIST: Lista BR Otimizada SS IPTV | Atualizada: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}",
-        "#EXTSIZE: big",  # default big tiles for better visibility
+        "#EXTSIZE: medium",  # default medium tiles for better visibility
     ]
 
     total = 0
