@@ -37,6 +37,8 @@ SOURCES = [
     "https://raw.githubusercontent.com/josemtocco/CanaisBR-brasil-tv-m3u-scr-v12-definitiva/refs/heads/main/output/brasil-tv.m3u",
     "https://raw.githubusercontent.com/josemtocco/mais-sbt-m3u/refs/heads/main/mais-sbt.m3u",
     "https://raw.githubusercontent.com/josemtocco/TV/refs/heads/main/Canais%2B.m3u",
+    "https://raw.githubusercontent.com/josemtocco/soplaytv/refs/heads/main/playlists/soplay.m3u",
+    "https://raw.githubusercontent.com/josemtocco/innovatv/refs/heads/main/playlists/innova.m3u",
 ]
 
 STATE_FILE = "state.json"
