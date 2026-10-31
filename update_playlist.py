@@ -25,7 +25,7 @@ SOURCES = [
     "https://raw.githubusercontent.com/josemtocco/m3u-ssiptv-br/refs/heads/main/lista.m3u",
     "https://raw.githubusercontent.com/josemtocco/tvgarden-br-m3u/refs/heads/main/lista.m3u",
     "https://raw.githubusercontent.com/josemtocco/vidks_m3u/refs/heads/main/vidks.m3u",
-    "https://raw.githubusercontent.com/josemtocco/batistaplay/refs/heads/main/batistaplay.m3u",
+    "https://raw.githubusercontent.com/josemtocco/batistaplay-grk/refs/heads/main/playlist.m3u",
     "https://raw.githubusercontent.com/josemtocco/xttv-m3u-ssiptv/refs/heads/main/lista.m3u",
     "https://raw.githubusercontent.com/josemtocco/soultv_m3u/refs/heads/main/soultv.m3u",
     "https://raw.githubusercontent.com/josemtocco/iptv-br-updater/refs/heads/main/playlists/canais_br_todos.m3u",
