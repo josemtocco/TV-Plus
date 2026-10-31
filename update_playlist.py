@@ -39,6 +39,7 @@ SOURCES = [
     "https://raw.githubusercontent.com/josemtocco/TV/refs/heads/main/Canais%2B.m3u",
     "https://raw.githubusercontent.com/josemtocco/soplaytv/refs/heads/main/playlists/soplay.m3u",
     "https://raw.githubusercontent.com/josemtocco/innovatv/refs/heads/main/playlists/innova.m3u",
+    "https://raw.githubusercontent.com/josemtocco/m3u-fast-br/refs/heads/main/playlists/runtime-tv.m3u",
 ]
 
 STATE_FILE = "state.json"
