@@ -208,6 +208,9 @@ CATEGORY_SYNONYMS = {
     "urban": "Urban TV",
     "web tv": "Web TV",
     "webtv": "Web TV",
+    "runtime tv": "Runtime TV",
+    "runtime.tv": "Runtime TV",
+    "runtime": "Runtime TV",
 
     # Outros
     "sem categoria": "Outros",
@@ -309,6 +312,7 @@ CONTAINS_MAP = [
     ("urban", "Urban TV"),
     ("web tv", "Web TV"),
     ("webtv", "Web TV"),
+    ("runtime", "Runtime TV"),
     ("premium", "Variedades"),
     ("outdoor", "Variedades"),
     ("travel", "Documentários"),
@@ -375,6 +379,7 @@ SPORTS_NAME_KEYWORDS = [
 
 # Filmes por nome do canal
 FILMES_NAME_KEYWORDS = [
+    "cinema em casa",
     "bora",
     "entretendo",
     "adrenalina pura",
@@ -395,6 +400,7 @@ INFANTIL_NAME_KEYWORDS = [
 # Frases/palavras no nome → categoria NOVA "TV" (redes principais)
 TV_NAME_PHRASES = [
     "rede globo",
+    "globo tv",
     "tv brasil",
     "tv cultura",
     "rede tv",
@@ -404,6 +410,7 @@ TV_NAME_PHRASES = [
     "rede brasil",
 ]
 TV_NAME_WORDS = [
+    "globo",
     "sbt",
     "band",
     "record",
@@ -493,6 +500,8 @@ def normalize_category(raw: str, channel_name: str = "") -> str:
             return "Urban TV"
         if "web tv" in name_lower or "webtv" in name_lower or "web-tv" in name_lower:
             return "Web TV"
+        if "runtime" in name_lower:
+            return "Runtime TV"
 
         # Documentários
         for kw in DOC_NAME_KEYWORDS:

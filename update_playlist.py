@@ -18,6 +18,30 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from category_map import normalize_category
 
+# Fontes EPG (XMLTV) Brasil — usadas no cabeçalho url-tvg / x-tvg-url
+EPG_URLS = [
+    "https://raw.githubusercontent.com/limaalef/BrazilTVEPG/main/epg.xml",
+    "https://raw.githubusercontent.com/limaalef/BrazilTVEPG/main/claro.xml",
+    "https://raw.githubusercontent.com/limaalef/BrazilTVEPG/main/plutotv.xml",
+    "https://epg.lat/files/br.xml.gz",
+    "https://iptv-epg.org/files/epg-br.xml",
+]
+
+
+def slug_tvg_id(name: str) -> str:
+    """Gera tvg-id estável a partir do nome quando a fonte não trouxe id."""
+    s = (name or "").strip()
+    s = re.sub(r"\s+", " ", s)
+    # remove sufixos comuns de qualidade/notas
+    s = re.sub(r"\s*\((?:[0-9]{3,4}p|HD|FHD|SD|4K).*?\)\s*", " ", s, flags=re.I)
+    s = re.sub(r"\s*\[.*?\]\s*", " ", s)
+    s = s.strip()
+    if not s:
+        return ""
+    return s
+
+
+
 SOURCES = [
     "https://raw.githubusercontent.com/josemtocco/-olhosnatv-brasil/refs/heads/main/olhosnatv.m3u",
     "https://raw.githubusercontent.com/josemtocco/ketv-m3u/refs/heads/main/ketv.m3u",
@@ -68,6 +92,7 @@ CATEGORY_ORDER = [
     "Hallo Tv",
     "Urban TV",
     "Web TV",
+    "Runtime TV",
     "Agronegócio",
     "Televendas",
     "Internacional",
@@ -212,10 +237,11 @@ def write_m3u(channels: dict[str, dict], path: str):
         if c not in ordered_cats:
             ordered_cats.append(c)
 
+    epg_joined = ",".join(EPG_URLS)
     lines = [
-        "#EXTM3U",
+        f'#EXTM3U url-tvg="{epg_joined}" x-tvg-url="{epg_joined}"',
         f"#PLAYLIST: Lista BR Otimizada SS IPTV | Atualizada: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}",
-        "#EXTSIZE: medium",  # tiles médium no SS IPTV
+        "#EXTSIZE: medium",
     ]
 
     total = 0
@@ -226,8 +252,11 @@ def write_m3u(channels: dict[str, dict], path: str):
         for url, ch in items:
             name = ch["name"]
             logo = ch.get("logo", "")
-            tvg_id = ch.get("tvg_id", "")
-            tvg_name = ch.get("tvg_name", name)
+            tvg_id = (ch.get("tvg_id") or "").strip()
+            tvg_name = (ch.get("tvg_name") or name or "").strip() or name
+            # EPG em todos: sempre tvg-id + tvg-name
+            if not tvg_id:
+                tvg_id = slug_tvg_id(tvg_name or name)
 
             attrs = f'-1 tvg-id="{tvg_id}" tvg-name="{tvg_name}"'
             if logo:
