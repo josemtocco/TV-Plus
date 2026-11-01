@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from category_map import normalize_category
 
 SOURCES = [
@@ -51,6 +52,7 @@ USER_AGENT = "Mozilla/5.0 (compatible; SSI PTV-Updater/1.0)"
 CATEGORY_ORDER = [
     "TV",
     "TVs Abertas",
+    "RS",
     "Notícias",
     "Esportes",
     "Filmes",
@@ -66,7 +68,6 @@ CATEGORY_ORDER = [
     "Hallo Tv",
     "Urban TV",
     "Web TV",
-    "Automóveis",
     "Agronegócio",
     "Televendas",
     "Internacional",
@@ -214,7 +215,7 @@ def write_m3u(channels: dict[str, dict], path: str):
     lines = [
         "#EXTM3U",
         f"#PLAYLIST: Lista BR Otimizada SS IPTV | Atualizada: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}",
-        "#EXTSIZE: big",  # default big tiles for better visibility
+        "#EXTSIZE: medium",  # tiles médium no SS IPTV
     ]
 
     total = 0
@@ -234,7 +235,7 @@ def write_m3u(channels: dict[str, dict], path: str):
             attrs += f' group-title="{cat}"'
 
             lines.append(f"#EXTINF:{attrs},{name}")
-            lines.append("#EXTSIZE: big")
+            lines.append("#EXTSIZE: medium")
             lines.append(url)
             total += 1
 
@@ -242,6 +243,64 @@ def write_m3u(channels: dict[str, dict], path: str):
         f.write("\n".join(lines) + "\n")
 
     print(f"[OK] Gerado {path} com {total} canais em {len(ordered_cats)} categorias.")
+
+
+def check_stream(url: str, timeout: float = 5.0) -> bool:
+    """Retorna True se o stream parece ativo (HTTP 2xx/3xx e algum dado)."""
+    if not url or not url.lower().startswith(("http://", "https://")):
+        return False
+    try:
+        req = Request(
+            url,
+            headers={
+                "User-Agent": USER_AGENT,
+                "Range": "bytes=0-2047",
+                "Accept": "*/*",
+            },
+            method="GET",
+        )
+        with urlopen(req, timeout=timeout) as resp:
+            code = getattr(resp, "status", None) or resp.getcode()
+            if code and int(code) >= 400:
+                return False
+            chunk = resp.read(2048)
+            # m3u8 playlist ou bytes de mídia
+            if chunk:
+                return True
+            return int(code) < 400 if code else True
+    except Exception:
+        return False
+
+
+def filter_active_channels(channels: dict[str, dict], workers: int = 40) -> dict[str, dict]:
+    """Mantém apenas URLs que respondem. Teste em paralelo."""
+    urls = list(channels.keys())
+    if not urls:
+        return {}
+    print(f"Testando {len(urls)} streams ({workers} workers, timeout 5s)...")
+    alive = set()
+    dead = 0
+    done = 0
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = {ex.submit(check_stream, u): u for u in urls}
+        for fut in as_completed(futs):
+            u = futs[fut]
+            done += 1
+            ok = False
+            try:
+                ok = fut.result()
+            except Exception:
+                ok = False
+            if ok:
+                alive.add(u)
+            else:
+                dead += 1
+            if done % 200 == 0 or done == len(urls):
+                print(f"  progresso: {done}/{len(urls)} (ativos: {len(alive)}, inativos: {dead})")
+    result = {u: channels[u] for u in alive}
+    print(f"[CHECK] Ativos: {len(result)} | Inativos removidos: {dead}")
+    return result
+
 
 
 def main():
@@ -272,7 +331,10 @@ def main():
     final = merge_channels(current, previous)
     print(f"Total após merge (com persistência): {len(final)}")
 
-    # Update state
+    # Só mantém canais com stream ativo/funcionando
+    final = filter_active_channels(final)
+
+    # Update state (apenas ativos — evita reintroduzir mortos)
     state["channels"] = final
     save_state(state)
 

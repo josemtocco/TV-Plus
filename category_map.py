@@ -19,6 +19,7 @@ CATEGORY_SYNONYMS = {
     "desenho": "Infantil",
     "kids": "Infantil",
     "infantil": "Infantil",
+    "infantis": "Infantil",
     "criança": "Infantil",
     "criancas": "Infantil",
     "crianças": "Infantil",
@@ -171,14 +172,14 @@ CATEGORY_SYNONYMS = {
     "cultural": "Educativos / Cultura",
     "culture": "Educativos / Cultura",
 
-    # Automóveis
-    "automoveis": "Automóveis",
-    "automóveis": "Automóveis",
-    "automovel": "Automóveis",
-    "automóvel": "Automóveis",
-    "carros": "Automóveis",
-    "carro": "Automóveis",
-    "auto": "Automóveis",
+    # Automóveis → Esportes (unificado)
+    "automoveis": "Esportes",
+    "automóveis": "Esportes",
+    "automovel": "Esportes",
+    "automóvel": "Esportes",
+    "carros": "Esportes",
+    "carro": "Esportes",
+    "auto": "Esportes",
 
     # Televendas
     "televendas": "Televendas",
@@ -211,6 +212,8 @@ CATEGORY_SYNONYMS = {
     # Outros
     "sem categoria": "Outros",
     "outros": "Outros",
+    "rs": "RS",
+    "rio grande do sul": "RS",
     "other": "Outros",
     "undefined": "Outros",
     "brazil": "TVs Abertas",
@@ -251,6 +254,7 @@ CONTAINS_MAP = [
     ("desenho", "Infantil"),
     ("kids", "Infantil"),
     ("infantil", "Infantil"),
+    ("infantis", "Infantil"),
     ("criança", "Infantil"),
     ("anime", "Infantil"),
     ("animation", "Infantil"),
@@ -290,9 +294,9 @@ CONTAINS_MAP = [
     ("educaç", "Educativos / Cultura"),
     ("education", "Educativos / Cultura"),
     ("cultur", "Educativos / Cultura"),
-    ("automó", "Automóveis"),
-    ("automov", "Automóveis"),
-    ("carro", "Automóveis"),
+    ("automó", "Esportes"),
+    ("automov", "Esportes"),
+    ("carro", "Esportes"),
     ("televenda", "Televendas"),
     ("agro", "Agronegócio"),
     ("rural", "Agronegócio"),
@@ -350,10 +354,45 @@ NEWS_NAME_KEYWORDS = [
     "caras tv",
     "new brasil",
     "news",
+    "cnn",
 ]
 
+# Esportes por nome do canal
+SPORTS_NAME_KEYWORDS = [
+    "sports",
+    "espn",
+    "sporttv",
+    "sport tv",
+    "motors",
+    "motor",
+    "fifa",
+    "ge tv",
+    "caze tv",
+    "cazé tv",
+    "canal goat",
+    "goat",
+]
+
+# Filmes por nome do canal
+FILMES_NAME_KEYWORDS = [
+    "bora",
+    "entretendo",
+    "adrenalina pura",
+    "filmelier",
+    "filmrise",
+    "soplaymovies",
+    "soplay movies",
+]
+
+# Infantil por nome
+INFANTIL_NAME_KEYWORDS = [
+    "dpa fast",
+    "d.p.a",
+    "dpa",
+]
+
+
 # Frases/palavras no nome → categoria NOVA "TV" (redes principais)
-# Frases: substring. Palavras curtas: limite de palavra.
 TV_NAME_PHRASES = [
     "rede globo",
     "tv brasil",
@@ -361,7 +400,8 @@ TV_NAME_PHRASES = [
     "rede tv",
     "tv pampa",
     "rede tv!",
-    "catve",  # CATVE / Catve / Catve2 etc.
+    "catve",
+    "rede brasil",
 ]
 TV_NAME_WORDS = [
     "sbt",
@@ -369,14 +409,73 @@ TV_NAME_WORDS = [
     "record",
     "tve",
     "bandeirantes",
+    "ngt",
 ]
 
+# Categoria RS (Rio Grande do Sul) — palavras e cidades
+RS_NAME_PHRASES = [
+    "porto alegre",
+    "passo fundo",
+    "santa maria",
+    "conecta mais tv",
+    "conecta mais",
+    "lagoatv",
+    "lagoa tv",
+    "studio tv",
+    "caxias do sul",
+    "novo hamburgo",
+    "sao leopoldo",
+    "são leopoldo",
+    "rio grande",
+    "bento goncalves",
+    "bento gonçalves",
+    "santana do livramento",
+    "uruguaiana",
+    "cruz alta",
+    "vacaria",
+    "lajeado",
+    "gramado",
+    "canela",
+    "osorio",
+    "osório",
+    "torres",
+    "sapucaia",
+    "esteio",
+    "sapiranga",
+    "farroupilha",
+    "erechim",
+    "pelotas",
+    "canoas",
+    "gravatai",
+    "gravataí",
+    "viamao",
+    "viamão",
+    "alvorada",
+    "cachoeirinha",
+    "bage",
+    "bagé",
+    "santa cruz do sul",
+    "sao borja",
+    "são borja",
+]
+RS_NAME_WORDS = [
+    "poa",
+    "adesso",
+    "serrana",
+    "gaucha",
+    "gaúcha",
+    "gaucho",
+    "gaúcho",
+    "ijui",
+    "ijuí",
+    "mon",  # marca local; limite de palavra
+]
 
 def normalize_category(raw: str, channel_name: str = "") -> str:
     """
     Normaliza a categoria.
     Prioridade:
-      1. Nome do canal (plataformas, Documentários, Música, Notícias, TV)
+      1. Nome do canal (plataformas, Documentários, Música, Notícias, Esportes, RS, TV)
       2. group-title exato / contains
     """
     name_lower = (channel_name or "").strip().lower()
@@ -388,7 +487,6 @@ def normalize_category(raw: str, channel_name: str = "") -> str:
         # Plataformas dedicadas
         if "pluto" in name_lower:
             return "Pluto Tv"
-        # Hallo TV (evita falso positivo de Halloween)
         if "hallo" in name_lower and "halloween" not in name_lower:
             return "Hallo Tv"
         if "urban" in name_lower or "trace urban" in name_lower:
@@ -396,32 +494,57 @@ def normalize_category(raw: str, channel_name: str = "") -> str:
         if "web tv" in name_lower or "webtv" in name_lower or "web-tv" in name_lower:
             return "Web TV"
 
-        # Documentários por palavras no nome
+        # Documentários
         for kw in DOC_NAME_KEYWORDS:
             if kw in name_lower:
                 return "Documentários"
 
-        # Música: nome começa com número OU contém "FM"
+        # Infantil (ex.: DPA Fast)
+        for kw in INFANTIL_NAME_KEYWORDS:
+            if kw in name_lower:
+                return "Infantil"
+
+        # Filmes por nome
+        for kw in FILMES_NAME_KEYWORDS:
+            if kw in name_lower:
+                return "Filmes"
+        # "film" como palavra (Film, Film XYZ) — evita falsos amplos demais
+        if re.search(r"\bfilm\b", name_lower) or "film " in name_lower or name_lower.startswith("film"):
+            return "Filmes"
+
+        # Música: começa com número, FM, radio/rádio
         name_stripped = name_lower.lstrip()
         if name_stripped and name_stripped[0].isdigit():
             return "Música"
-        if "fm" in name_lower:
+        if "fm" in name_lower or "radio" in name_lower or "rádio" in name_lower:
             return "Música"
 
-        # Notícias por palavras no nome
+        # Notícias
         for kw in NEWS_NAME_KEYWORDS:
             if kw in name_lower:
                 return "Notícias"
 
-        # Categoria "TV" (redes principais) por nome do canal
+        # Esportes
+        for kw in SPORTS_NAME_KEYWORDS:
+            if kw in name_lower:
+                return "Esportes"
+
+        # RS (Rio Grande do Sul)
+        for phrase in RS_NAME_PHRASES:
+            if phrase in name_lower:
+                return "RS"
+        for word in RS_NAME_WORDS:
+            if re.search(r"\b" + re.escape(word) + r"\b", name_lower):
+                return "RS"
+
+        # TV (redes principais)
         for phrase in TV_NAME_PHRASES:
             if phrase in name_lower:
                 return "TV"
         for word in TV_NAME_WORDS:
-            if re.search(rf"\b{re.escape(word)}\b", name_lower):
+            if re.search(r"\b" + re.escape(word) + r"\b", name_lower):
                 return "TV"
 
-        # GloboNews (já coberto por "news", mas mantém explícito)
         if "globonews" in name_lower or "globo news" in name_lower:
             return "Notícias"
 

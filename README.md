@@ -36,7 +36,7 @@ As listas são agregadas a partir dos repositórios públicos do usuário `josem
 - m3u-ssiptv-br
 - tvgarden-br-m3u
 - vidks_m3u
-- batistaplay
+- batistaplay-grk
 - xttv-m3u-ssiptv
 - soultv_m3u
 - iptv-br-updater
@@ -47,6 +47,10 @@ As listas são agregadas a partir dos repositórios públicos do usuário `josem
 - tv-brasil-m3u
 - CanaisBR-brasil-tv-m3u-scr-v12-definitiva
 - mais-sbt-m3u
+- TV (Canais+)
+- soplaytv
+- innovatv
+- m3u-fast-br
 
 ## Arquivos
 
