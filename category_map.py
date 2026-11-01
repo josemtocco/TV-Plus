@@ -1,3 +1,4 @@
+import re
 # Category normalization map: lowercase key -> canonical name
 # Também usa matching parcial / contains e prioridade por nome do canal
 
@@ -92,7 +93,7 @@ CATEGORY_SYNONYMS = {
     "comedy": "Variedades",
     "reality": "Variedades",
 
-    # TVs Abertas / Canais Abertos
+    # TV / Canais Abertos
     "tvs abertas": "TVs Abertas",
     "tv aberta": "TVs Abertas",
     "canais abertos": "TVs Abertas",
@@ -113,7 +114,7 @@ CATEGORY_SYNONYMS = {
     "retransmissora": "TVs Abertas",
     "governo": "TVs Abertas",
     "legislative": "TVs Abertas",
-    # Alta Definição → realocada para TVs Abertas (sem categoria própria)
+    # Alta Definição → realocada para TV (sem categoria própria)
     "alta definição": "TVs Abertas",
     "alta definicao": "TVs Abertas",
     "alta definição ( hd,fhd )": "TVs Abertas",
@@ -220,7 +221,7 @@ CATEGORY_SYNONYMS = {
     "posicao premium": "Variedades",
     "minas": "TVs Abertas",
     "outdoor": "Variedades",
-    "travel": "Variedades",
+    "travel": "Documentários",
     "family": "Variedades",
     "câmera": "Variedades",
     "camera": "Variedades",
@@ -233,6 +234,10 @@ CATEGORY_SYNONYMS = {
     "rn": "TVs Abertas",
     "étnicos": "Internacional",
     "etnicos": "Internacional",
+    "natureza": "Documentários",
+    "viagem": "Documentários",
+    "weather": "Documentários",
+    "wild": "Documentários",
 }
 
 # Keywords that if present in the raw group (after lower) map to category
@@ -302,7 +307,11 @@ CONTAINS_MAP = [
     ("webtv", "Web TV"),
     ("premium", "Variedades"),
     ("outdoor", "Variedades"),
-    ("travel", "Variedades"),
+    ("travel", "Documentários"),
+    ("natureza", "Documentários"),
+    ("viagem", "Documentários"),
+    ("weather", "Documentários"),
+    ("wild", "Documentários"),
     ("family", "Variedades"),
     ("câmera", "Variedades"),
     ("camera", "Variedades"),
@@ -313,19 +322,70 @@ CONTAINS_MAP = [
 ]
 
 
+# Palavras no nome do canal → Documentários
+DOC_NAME_KEYWORDS = [
+    "nature time",
+    "nature love",
+    "natureza",
+    "animais",
+    "travel",
+    "doc",
+    "viagem",
+    "weather",
+    "wild",
+]
+
+# Palavras no nome do canal → Notícias
+NEWS_NAME_KEYWORDS = [
+    "band news",
+    "jovem pan news",
+    "record news",
+    "canal uol",
+    "veja +",
+    "veja+",
+    "a critica",
+    "a crítica",
+    "sbt news",
+    "times brasil cnbc",
+    "caras tv",
+    "new brasil",
+    "news",
+]
+
+# Frases/palavras no nome → categoria NOVA "TV" (redes principais)
+# Frases: substring. Palavras curtas: limite de palavra.
+TV_NAME_PHRASES = [
+    "rede globo",
+    "tv brasil",
+    "tv cultura",
+    "rede tv",
+    "tv pampa",
+    "rede tv!",
+    "catve",  # CATVE / Catve / Catve2 etc.
+]
+TV_NAME_WORDS = [
+    "sbt",
+    "band",
+    "record",
+    "tve",
+    "bandeirantes",
+]
+
+
 def normalize_category(raw: str, channel_name: str = "") -> str:
     """
     Normaliza a categoria.
     Prioridade:
-      1. Nome do canal (plataformas Pluto / Hallo / Urban / Web TV e GloboNews)
+      1. Nome do canal (plataformas, Documentários, Música, Notícias, TV)
       2. group-title exato / contains
     """
     name_lower = (channel_name or "").strip().lower()
     original = (raw or "").strip()
     key = original.lower()
 
-    # --- Prioridade 1: nome do canal (plataformas e casos especiais) ---
+    # --- Prioridade 1: nome do canal ---
     if name_lower:
+        # Plataformas dedicadas
         if "pluto" in name_lower:
             return "Pluto Tv"
         # Hallo TV (evita falso positivo de Halloween)
@@ -335,6 +395,33 @@ def normalize_category(raw: str, channel_name: str = "") -> str:
             return "Urban TV"
         if "web tv" in name_lower or "webtv" in name_lower or "web-tv" in name_lower:
             return "Web TV"
+
+        # Documentários por palavras no nome
+        for kw in DOC_NAME_KEYWORDS:
+            if kw in name_lower:
+                return "Documentários"
+
+        # Música: nome começa com número OU contém "FM"
+        name_stripped = name_lower.lstrip()
+        if name_stripped and name_stripped[0].isdigit():
+            return "Música"
+        if "fm" in name_lower:
+            return "Música"
+
+        # Notícias por palavras no nome
+        for kw in NEWS_NAME_KEYWORDS:
+            if kw in name_lower:
+                return "Notícias"
+
+        # Categoria "TV" (redes principais) por nome do canal
+        for phrase in TV_NAME_PHRASES:
+            if phrase in name_lower:
+                return "TV"
+        for word in TV_NAME_WORDS:
+            if re.search(rf"\b{re.escape(word)}\b", name_lower):
+                return "TV"
+
+        # GloboNews (já coberto por "news", mas mantém explícito)
         if "globonews" in name_lower or "globo news" in name_lower:
             return "Notícias"
 

@@ -24,7 +24,7 @@ SOURCES = [
     "https://raw.githubusercontent.com/josemtocco/clubecanais-m3u/refs/heads/main/clubecanais.m3u",
     "https://raw.githubusercontent.com/josemtocco/m3u-ssiptv-br/refs/heads/main/lista.m3u",
     "https://raw.githubusercontent.com/josemtocco/tvgarden-br-m3u/refs/heads/main/lista.m3u",
-    "https://raw.githubusercontent.com/josemtocco/vidks_m3u/refs/heads/main/playlist.m3u",
+    "https://raw.githubusercontent.com/josemtocco/vidks_m3u/refs/heads/main/data/playlist.m3u",
     "https://raw.githubusercontent.com/josemtocco/batistaplay-grk/refs/heads/main/playlist.m3u",
     "https://raw.githubusercontent.com/josemtocco/xttv-m3u-ssiptv/refs/heads/main/lista.m3u",
     "https://raw.githubusercontent.com/josemtocco/soultv_m3u/refs/heads/main/soultv.m3u",
@@ -49,6 +49,7 @@ USER_AGENT = "Mozilla/5.0 (compatible; SSI PTV-Updater/1.0)"
 
 # Ordem preferencial das categorias no M3U final
 CATEGORY_ORDER = [
+    "TV",
     "TVs Abertas",
     "Notícias",
     "Esportes",
@@ -213,7 +214,7 @@ def write_m3u(channels: dict[str, dict], path: str):
     lines = [
         "#EXTM3U",
         f"#PLAYLIST: Lista BR Otimizada SS IPTV | Atualizada: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}",
-        "#EXTSIZE: medium",  # default medium tiles for better visibility
+        "#EXTSIZE: big",  # default big tiles for better visibility
     ]
 
     total = 0
@@ -233,7 +234,7 @@ def write_m3u(channels: dict[str, dict], path: str):
             attrs += f' group-title="{cat}"'
 
             lines.append(f"#EXTINF:{attrs},{name}")
-            lines.append("#EXTSIZE: medium")
+            lines.append("#EXTSIZE: big")
             lines.append(url)
             total += 1
 
